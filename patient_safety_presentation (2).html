@@ -228,6 +228,12 @@
             transform: translateX(5px);
         }
 
+        .timeline-item:focus-visible {
+            outline: 3px solid rgba(58, 90, 64, 0.35);
+            outline-offset: 4px;
+            border-radius: 8px;
+        }
+
         .timeline-dot {
             position: absolute;
             left: 18px;
@@ -267,14 +273,44 @@
             color: var(--color-accent);
             font-weight: 500;
             margin-bottom: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .timeline-time::after {
+            content: '▸';
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-item.active .timeline-time::after {
+            transform: rotate(90deg);
         }
 
         .timeline-content {
             background: var(--color-surface);
-            padding: 1.5rem;
+            padding: 0 1.5rem;
             border-radius: 8px;
-            border: 1px solid var(--color-border);
+            border: 1px solid transparent;
+            box-shadow: none;
+            margin-top: 0;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: max-height 0.45s ease, opacity 0.3s ease, margin-top 0.3s ease,
+                padding 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease,
+                transform 0.3s ease;
+        }
+
+        .timeline-item.active .timeline-content {
+            padding: 1.5rem;
+            border-color: var(--color-border);
             box-shadow: var(--shadow-sm);
+            margin-top: 0.35rem;
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .timeline-title {
@@ -289,218 +325,171 @@
             line-height: 1.6;
         }
 
-        /* Root Cause Diagram - Fishbone */
-        .fishbone-container {
-            background: var(--color-surface);
-            padding: 3rem;
-            border-radius: 12px;
-            margin: 2rem 0;
-            overflow-x: auto;
+        /* Root Cause Analysis flip cards */
+        .rca-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
         }
 
-        .fishbone-wrapper {
-            min-width: 1100px;
-            height: 700px;
+        .rca-flip-card {
             position: relative;
-            margin: 2rem auto;
+            height: 330px;
+            perspective: 1200px;
+            cursor: pointer;
         }
 
-        .spine {
-            position: absolute;
-            left: 5%;
-            top: 50%;
-            width: 70%;
-            height: 3px;
-            background: var(--color-primary);
-            transform: translateY(-50%);
+        .rca-flip-card:focus-visible {
+            outline: 3px solid rgba(58, 90, 64, 0.35);
+            outline-offset: 4px;
+            border-radius: 12px;
         }
 
-        .spine::after {
-            content: '';
-            position: absolute;
-            right: -15px;
-            top: -8px;
-            width: 0;
-            height: 0;
-            border-left: 20px solid var(--color-primary);
-            border-top: 10px solid transparent;
-            border-bottom: 10px solid transparent;
+        .rca-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.7s ease;
+            transform-style: preserve-3d;
         }
 
-        .cause-bone {
-            position: absolute;
+        .rca-flip-card.flipped .rca-card-inner {
+            transform: rotateY(180deg);
         }
 
-        .bone-line {
+        .rca-card-face {
             position: absolute;
-            width: 140px;
-            height: 2px;
-            background: var(--color-accent);
-            transform-origin: left center;
+            inset: 0;
+            border-radius: 12px;
+            padding: 1.4rem;
+            box-shadow: var(--shadow-md);
+            backface-visibility: hidden;
+            border: 2px solid var(--color-border);
+            display: flex;
+            flex-direction: column;
         }
 
-        .bone-label {
-            position: absolute;
+        .rca-card-front {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #f8fbf9 0%, #f2f7f4 100%);
+        }
+
+        .rca-card-back {
+            transform: rotateY(180deg);
+            background: #ffffff;
+            border-color: var(--color-accent);
+        }
+
+        .rca-card-title {
             background: var(--color-primary);
             color: #fff;
-            padding: 0.5rem 1.2rem;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            font-family: 'IBM Plex Mono', monospace;
-            letter-spacing: 0.5px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .bone-content {
-            position: absolute;
-            background: var(--color-surface);
-            border: 2px solid var(--color-accent);
+            padding: 0.7rem 1.05rem;
             border-radius: 8px;
-            padding: 1.2rem;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            min-width: 200px;
-            max-width: 260px;
-            box-shadow: var(--shadow-md);
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 0.8px;
+            font-family: 'IBM Plex Mono', monospace;
+            align-self: flex-start;
+            margin-bottom: 1rem;
         }
 
-        .bone-content ul {
+        .rca-card-front .rca-card-title {
+            background: transparent;
+            color: var(--color-primary);
+            padding: 0;
+            border-radius: 0;
+            margin: 0;
+            align-self: center;
+            width: 100%;
+            font-size: 2.45rem;
+            letter-spacing: 2px;
+            line-height: 1.05;
+            transition: transform 0.35s ease, color 0.35s ease;
+        }
+
+        .rca-card-back .rca-card-title {
+            background: var(--color-primary);
+            color: #fff;
+        }
+
+        .rca-card-description {
+            color: var(--color-text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            max-width: 90%;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        .rca-flip-card:hover .rca-card-front .rca-card-title,
+        .rca-flip-card:focus-visible .rca-card-front .rca-card-title {
+            transform: translateY(-20px) scale(0.88);
+            color: var(--color-accent);
+        }
+
+        .rca-flip-card:hover .rca-card-description,
+        .rca-flip-card:focus-visible .rca-card-description {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .rca-card-back ul {
             list-style: none;
             padding: 0;
             margin: 0;
+            color: var(--color-text);
+            line-height: 1.55;
+            overflow-y: auto;
+            padding-right: 0.25rem;
         }
 
-        .bone-content li {
-            margin-bottom: 0.6rem;
-            padding-left: 1.3rem;
+        .rca-card-back li {
             position: relative;
+            padding-left: 1.2rem;
+            margin-bottom: 0.55rem;
+            font-size: 0.9rem;
         }
 
-        .bone-content li:last-child {
+        .rca-card-back li:last-child {
             margin-bottom: 0;
         }
 
-        .bone-content li::before {
-            content: '→';
+        .rca-card-back li::before {
+            content: '•';
             position: absolute;
             left: 0;
             color: var(--color-accent);
-            font-weight: bold;
-            font-size: 1.1rem;
+            font-weight: 700;
         }
 
-        /* Top bones */
-        .bone-1 {
-            left: 12%;
-            top: 18%;
-        }
-        .bone-1 .bone-line {
-            transform: rotate(-40deg);
-        }
-        .bone-1 .bone-label {
-            top: -45px;
-            left: 85px;
-        }
-        .bone-1 .bone-content {
-            top: -180px;
-            left: 110px;
-        }
-
-        .bone-2 {
-            left: 32%;
-            top: 23%;
-        }
-        .bone-2 .bone-line {
-            transform: rotate(-30deg);
-        }
-        .bone-2 .bone-label {
-            top: -40px;
-            left: 80px;
-        }
-        .bone-2 .bone-content {
-            top: -220px;
-            left: 115px;
-        }
-
-        .bone-3 {
-            left: 52%;
-            top: 28%;
-        }
-        .bone-3 .bone-line {
-            transform: rotate(-20deg);
-        }
-        .bone-3 .bone-label {
-            top: -35px;
-            left: 75px;
-        }
-        .bone-3 .bone-content {
-            top: -160px;
-            left: 110px;
-        }
-
-        /* Bottom bones */
-        .bone-4 {
-            left: 20%;
-            bottom: 18%;
-        }
-        .bone-4 .bone-line {
-            transform: rotate(40deg);
-        }
-        .bone-4 .bone-label {
-            bottom: -45px;
-            left: 85px;
-        }
-        .bone-4 .bone-content {
-            bottom: -160px;
-            left: 110px;
-        }
-
-        .bone-5 {
-            left: 42%;
-            bottom: 23%;
-        }
-        .bone-5 .bone-line {
-            transform: rotate(25deg);
-        }
-        .bone-5 .bone-label {
-            bottom: -40px;
-            left: 80px;
-        }
-        .bone-5 .bone-content {
-            bottom: -160px;
-            left: 115px;
-        }
-
-        .outcome-box {
-            position: absolute;
-            right: 8%;
-            top: 50%;
-            transform: translateY(-50%);
+        .rca-outcome {
+            margin-top: 1.5rem;
             background: linear-gradient(135deg, var(--color-secondary) 0%, #a01019 100%);
             color: #fff;
-            padding: 2rem;
             border-radius: 12px;
-            font-weight: 700;
             text-align: center;
-            width: 220px;
+            padding: 1.4rem;
             box-shadow: var(--shadow-lg);
         }
 
-        .outcome-label {
-            font-size: 0.75rem;
+        .rca-outcome-label {
+            font-size: 0.78rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 0.5rem;
             opacity: 0.9;
             font-family: 'IBM Plex Mono', monospace;
+            margin-bottom: 0.45rem;
         }
 
-        .outcome-title {
-            font-size: 1.4rem;
+        .rca-outcome-title {
+            font-size: 1.35rem;
             font-weight: 700;
-            line-height: 1.2;
+            line-height: 1.25;
         }
 
         /* Cognitive Bias Cards */
@@ -560,10 +549,24 @@
 
         .bias-application {
             color: var(--color-text);
-            padding: 1rem;
             background: rgba(26, 77, 46, 0.05);
             border-radius: 6px;
-            border-left: 3px solid var(--color-primary);
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            margin-top: 0;
+            padding: 0 1rem;
+            border-left: 0 solid var(--color-primary);
+            transition: max-height 0.35s ease, opacity 0.25s ease, margin-top 0.25s ease,
+                padding 0.25s ease, border-left-width 0.25s ease;
+        }
+
+        .bias-card:hover .bias-application {
+            max-height: 1200px;
+            opacity: 1;
+            margin-top: 1rem;
+            padding: 1rem;
+            border-left-width: 3px;
         }
 
         /* Recommendations */
@@ -727,11 +730,27 @@
         }
 
         /* Responsive */
+        @media (max-width: 1200px) {
+            .rca-grid {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            }
+
+            .rca-flip-card {
+                height: 300px;
+            }
+        }
+
         @media (max-width: 768px) {
             h1 { font-size: 2rem; }
             .subtitle { font-size: 1.1rem; }
             .card { padding: 1.5rem; }
-            .fishbone-wrapper { min-width: 100%; height: 900px; }
+            .rca-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .rca-flip-card {
+                height: 290px;
+            }
         }
     </style>
 </head>
@@ -812,7 +831,7 @@
                         <div class="timeline-content">
                             <div class="timeline-title">Second Telephone Recommendation</div>
                             <div class="timeline-description">
-                                Ophthalmology again stated complete vision loss can occur due to swelling and clinical course is "expected." Recommended outpatient follow-up despite patient still admitted for rhabdomyolysis. <strong>Still no in-person evaluation.</strong>
+                                Ophthalmology again stated complete vision loss can occur due to swelling and clinical course is "expected." Recommended outpatient follow-up despite patient still remaining admitted for rhabdomyolysis. <strong>Still no in-person evaluation.</strong>
                             </div>
                         </div>
                     </div>
@@ -868,29 +887,32 @@
         <div id="root-cause" class="section">
             <div class="card">
                 <h2><span class="icon">🔍</span> Root Cause Analysis</h2>
-                <p style="margin-bottom: 2rem; color: var(--color-text-muted);">Fishbone diagram identifying contributing factors across people, environment, processes, methods, and technology</p>
-
-                <div class="fishbone-container">
-                    <div class="fishbone-wrapper">
-                        <div class="spine"></div>
-
-                        <!-- Top Bones -->
-                        <div class="cause-bone bone-1">
-                            <div class="bone-line"></div>
-                            <div class="bone-label">PEOPLE</div>
-                            <div class="bone-content">
+                <div class="rca-grid">
+                    <div class="rca-flip-card" role="button" tabindex="0" aria-pressed="false">
+                        <div class="rca-card-inner">
+                            <div class="rca-card-face rca-card-front">
+                                <div class="rca-card-title">PEOPLE</div>
+                                <p class="rca-card-description">Human factors and team dynamics that delayed in-person specialty evaluation.</p>
+                            </div>
+                            <div class="rca-card-face rca-card-back">
+                                <div class="rca-card-title">PEOPLE</div>
                                 <ul>
                                     <li>Consultant resistant to in-person evaluation</li>
                                     <li>Residents/team uncomfortable with thorough ophthalmologic exam</li>
-                                    <li>Answering service staffed by non-physician</li>
+                                    <li>Non-physician staffing answering service and making recommendations without physician input</li>
                                 </ul>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="cause-bone bone-2">
-                            <div class="bone-line"></div>
-                            <div class="bone-label">ENVIRONMENT</div>
-                            <div class="bone-content">
+                    <div class="rca-flip-card" role="button" tabindex="0" aria-pressed="false">
+                        <div class="rca-card-inner">
+                            <div class="rca-card-face rca-card-front">
+                                <div class="rca-card-title">ENVIRONMENT</div>
+                                <p class="rca-card-description">System context and staffing conditions that created barriers to timely care.</p>
+                            </div>
+                            <div class="rca-card-face rca-card-back">
+                                <div class="rca-card-title">ENVIRONMENT</div>
                                 <ul>
                                     <li>Weekend timing</li>
                                     <li>Lack of academic ophthalmology service</li>
@@ -900,81 +922,70 @@
                                 </ul>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="cause-bone bone-3">
-                            <div class="bone-line"></div>
-                            <div class="bone-label">PROCESSES</div>
-                            <div class="bone-content">
+                    <div class="rca-flip-card" role="button" tabindex="0" aria-pressed="false">
+                        <div class="rca-card-inner">
+                            <div class="rca-card-face rca-card-front">
+                                <div class="rca-card-title">PROCESSES</div>
+                                <p class="rca-card-description">Workflow and policy gaps that allowed escalating risk to go uncorrected.</p>
+                            </div>
+                            <div class="rca-card-face rca-card-back">
+                                <div class="rca-card-title">PROCESSES</div>
                                 <ul>
-                                    <li>No policy requiring in-person specialist evaluation</li>
+                                    <li>Clunky consult process that fails to reliably reach a physician.</li>
                                     <li>No escalation pathway for declined consults</li>
-                                    <li>Unclear criteria for urgent vs. emergent consults</li>
                                 </ul>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Bottom Bones -->
-                        <div class="cause-bone bone-4">
-                            <div class="bone-line"></div>
-                            <div class="bone-label">METHODS</div>
-                            <div class="bone-content">
+                    <div class="rca-flip-card" role="button" tabindex="0" aria-pressed="false">
+                        <div class="rca-card-inner">
+                            <div class="rca-card-face rca-card-front">
+                                <div class="rca-card-title">METHODS</div>
+                                <p class="rca-card-description">Operational methods used for consult workflows and communication handoffs.</p>
+                            </div>
+                            <div class="rca-card-face rca-card-back">
+                                <div class="rca-card-title">METHODS</div>
                                 <ul>
                                     <li>Callbook system for finding consultants</li>
                                     <li>"Consult Physician" order in Cerner</li>
-                                    <li>Reliance on answering services</li>
                                 </ul>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="cause-bone bone-5">
-                            <div class="bone-line"></div>
-                            <div class="bone-label">TECHNOLOGY</div>
-                            <div class="bone-content">
+                    <div class="rca-flip-card" role="button" tabindex="0" aria-pressed="false">
+                        <div class="rca-card-inner">
+                            <div class="rca-card-face rca-card-front">
+                                <div class="rca-card-title">TECHNOLOGY</div>
+                                <p class="rca-card-description">Tooling and communication-channel limitations that obscured clinical urgency.</p>
+                            </div>
+                            <div class="rca-card-face rca-card-back">
+                                <div class="rca-card-title">TECHNOLOGY</div>
                                 <ul>
                                     <li>No direct communication with consultant</li>
-                                    <li>Only indirect contact via answering service</li>
                                     <li>Photo upload system used as substitute for evaluation</li>
                                 </ul>
                             </div>
                         </div>
-
-                        <div class="outcome-box">
-                            <div class="outcome-label">Adverse Outcome</div>
-                            <div class="outcome-title">DELAYED DIAGNOSIS OF CRAO</div>
-                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="card">
-                <h2><span class="icon">🎯</span> Contributing Factors Summary</h2>
-                
-                <h3>Primary Systems Failures</h3>
-                <div style="background: rgba(193, 18, 31, 0.05); padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
-                    <ul style="line-height: 1.8; margin-left: 1.5rem;">
-                        <li><strong>No mandatory in-person evaluation policy</strong> for vision-threatening emergencies</li>
-                        <li><strong>No escalation pathway</strong> when specialists decline appropriate evaluation</li>
-                        <li><strong>Communication barrier</strong> — inability to communicate directly with ophthalmologist</li>
-                        <li><strong>Non-physician intermediary</strong> making clinical triage decisions</li>
-                    </ul>
+                <div class="rca-outcome">
+                    <div class="rca-outcome-label">Adverse Outcome</div>
+                    <div class="rca-outcome-title">DELAYED DIAGNOSIS OF CRAO</div>
                 </div>
-
-                <h3>Secondary Contributing Factors</h3>
-                <ul style="line-height: 1.8; margin-left: 2rem; margin-top: 1rem;">
-                    <li>Weekend timing with reduced specialist availability</li>
-                    <li>Community hospital without academic ophthalmology service</li>
-                    <li>Limited MRI scanner availability delaying diagnostic imaging</li>
-                    <li>Team deference to specialist expertise, even when recommendations seemed inappropriate</li>
-                    <li>Resident team lacking confidence/training in ophthalmologic examination</li>
-                </ul>
             </div>
+
         </div>
 
         <!-- Cognitive Bias Section -->
         <div id="cognitive-bias" class="section">
             <div class="card">
-                <h2><span class="icon">🧠</span> Cognitive Biases Identified</h2>
-                <p style="margin-bottom: 2rem; color: var(--color-text-muted);">Understanding the cognitive errors that contributed to diagnostic delay</p>
+                <h2><span class="icon">🧠</span> Cognitive Biases</h2>
+                <p style="margin-bottom: 2rem; color: var(--color-text-muted);">Understanding the potential cognitive errors that contributed to diagnostic delay even if some were generally avoided.</p>
 
                 <div class="bias-grid">
                     <div class="bias-card">
@@ -983,7 +994,7 @@
                             The tendency to rely too heavily on the first piece of information encountered (the "anchor") when making decisions, even when that information is incomplete or incorrect.
                         </div>
                         <div class="bias-application">
-                            <strong>How it manifested:</strong> Early fixation on orbital cellulitis as the diagnosis, despite negative initial imaging (CT and MRI head). The team and consultant remained anchored to this diagnosis even as the clinical picture evolved and vision loss became complete, delaying consideration of alternative etiologies like CRAO.
+                            <strong>How it manifested:</strong> Early fixation on orbital cellulitis as the diagnosis given the significant eyelid swelling, despite negative initial imaging (CT and MRI head). The team and consultant remained anchored to this diagnosis even as the clinical picture evolved and vision loss became complete, delaying consideration of alternative etiologies like CRAO.
                         </div>
                     </div>
 
@@ -1003,7 +1014,7 @@
                             The tendency to attribute greater accuracy to the opinion of an authority figure and be more influenced by that opinion, even when the authority's recommendations may be inappropriate.
                         </div>
                         <div class="bias-application">
-                            <strong>How it manifested:</strong> Excessive deference to ophthalmology consultant recommendations (via answering service) despite multiple red flags: complete vision loss, persistent symptoms, evolving clinical picture. The team hesitated to push back against specialist recommendations even when in-person evaluation seemed clearly indicated.
+                            <strong>How it manifested:</strong> Deference to ophthalmology consultant recommendations despite multiple red flags: complete vision loss, persistent symptoms, evolving clinical picture. The team hesitated to push back against specialist recommendations even when in-person evaluation seemed clearly indicated.
                         </div>
                     </div>
 
@@ -1019,13 +1030,6 @@
                 </div>
             </div>
 
-            <div class="alert">
-                <div class="alert-icon">💡</div>
-                <div class="alert-content">
-                    <div class="alert-title">Debiasing Strategy</div>
-                    <p><strong>Forced Consideration of Alternatives:</strong> In cases of acute, complete vision loss, implement a systematic differential diagnosis review that explicitly includes vascular etiologies (CRAO, CRVO), inflammatory causes (optic neuritis), and infectious etiologies. This checklist-based approach can counteract anchoring and premature closure.</p>
-                </div>
-            </div>
         </div>
 
         <!-- Recommendations Section -->
@@ -1038,34 +1042,6 @@
                     <div class="recommendation-item">
                         <div>
                             <span class="recommendation-number">1</span>
-                            <span class="recommendation-title">Mandatory In-Person Ophthalmology Evaluation Policy</span>
-                        </div>
-                        <div class="recommendation-description">
-                            <strong>Recommendation:</strong> Establish institutional policy requiring mandatory in-person ophthalmology consultation within 2 hours for all cases of new, acute, or worsening vision loss.
-                            <br><br>
-                            <strong>Rationale:</strong> Vision loss is a time-sensitive emergency. CRAO has a therapeutic window similar to stroke (hours, not days). Remote assessment via photos or telephonic recommendations is insufficient for acute vision-threatening conditions.
-                            <br><br>
-                            <strong>Implementation:</strong> Create clear criteria in EHR order sets. Flag "acute vision loss" consults as requiring immediate in-person evaluation. Provide explicit language for requesting physicians to escalate if declined.
-                        </div>
-                    </div>
-
-                    <div class="recommendation-item">
-                        <div>
-                            <span class="recommendation-number">2</span>
-                            <span class="recommendation-title">Consultation Escalation Pathway</span>
-                        </div>
-                        <div class="recommendation-description">
-                            <strong>Recommendation:</strong> Develop a formal escalation pathway when specialists decline what requesting team considers appropriate evaluation. Include chain of command (consultant → division chief → department chair → CMO).
-                            <br><br>
-                            <strong>Rationale:</strong> Currently, no mechanism exists for residents/attendings to escalate when specialist recommendations seem inappropriate. This creates dangerous power imbalances where urgent patient needs may not be met.
-                            <br><br>
-                            <strong>Implementation:</strong> Create consultation escalation protocol. Train residents on appropriate use. Track escalation events for quality review.
-                        </div>
-                    </div>
-
-                    <div class="recommendation-item">
-                        <div>
-                            <span class="recommendation-number">3</span>
                             <span class="recommendation-title">Direct Physician Communication for Urgent Consults</span>
                         </div>
                         <div class="recommendation-description">
@@ -1073,27 +1049,27 @@
                             <br><br>
                             <strong>Rationale:</strong> Clinical triage decisions made by non-physicians (even trained ophthalmic assistants) may not adequately assess urgency or recognize red flags requiring immediate evaluation.
                             <br><br>
-                            <strong>Implementation:</strong> Provide direct contact numbers for on-call specialists. Mandate callback within 15 minutes for urgent consults. Consider secure messaging platforms for rapid physician-to-physician communication.
+                            <strong>Implementation:</strong> Provide direct contact numbers for on-call specialists. Consider mandating secure messaging platforms for rapid physician-to-physician communication.
                         </div>
                     </div>
 
                     <div class="recommendation-item">
                         <div>
-                            <span class="recommendation-number">4</span>
+                            <span class="recommendation-number">2</span>
                             <span class="recommendation-title">Enhanced Diagnostic Imaging Availability</span>
                         </div>
                         <div class="recommendation-description">
-                            <strong>Recommendation:</strong> Increase MRI scanner availability and prioritize urgent neurologic/ophthalmologic cases to reduce time to diagnosis.
+                            <strong>Recommendation:</strong> Increase MRI scanner availability to reduce time to diagnosis.
                             <br><br>
-                            <strong>Rationale:</strong> Delayed MRI orbit availability in this case prolonged diagnostic uncertainty and contributed to delayed recognition of optic neuritis and ultimately CRAO.
+                            <strong>Rationale:</strong> Delayed MRI orbit availability in this case prolonged diagnostic uncertainty and contributed to delayed recognition of other possible pathologies.
                             <br><br>
-                            <strong>Implementation:</strong> Assess current MRI utilization patterns. Consider additional scanner or extended hours. Create clear prioritization criteria for urgent ophthalmologic/neurologic imaging.
+                            <strong>Implementation:</strong> Buy another MRI so our stroke rule outs can go home sooner.
                         </div>
                     </div>
 
                     <div class="recommendation-item">
                         <div>
-                            <span class="recommendation-number">5</span>
+                            <span class="recommendation-number">3</span>
                             <span class="recommendation-title">Resident Education: Acute Vision Loss Evaluation</span>
                         </div>
                         <div class="recommendation-description">
@@ -1101,26 +1077,9 @@
                             <br><br>
                             <strong>Rationale:</strong> While specialist consultation is essential, residents should have baseline competency to recognize vision-threatening emergencies and understand when specialist evaluation is non-negotiable.
                             <br><br>
-                            <strong>Implementation:</strong> Include acute vision loss module in resident orientation. Provide pocket cards with red flags requiring immediate ophthalmology evaluation. Simulation cases during morning report.
+                            <strong>Implementation:</strong> Bringing in an Opthalmologist to do teaching and eye exam simulations.
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="key-points">
-                <h3>🎯 Implementation Priorities</h3>
-                <ul>
-                    <li><strong>Immediate (0-3 months):</strong> Establish consultation escalation pathway; create acute vision loss policy</li>
-                    <li><strong>Short-term (3-6 months):</strong> Implement direct physician communication requirement; develop resident education module</li>
-                    <li><strong>Long-term (6-12 months):</strong> Assess MRI capacity and consider expansion; track outcomes and policy compliance</li>
-                </ul>
-            </div>
-
-            <div class="alert">
-                <div class="alert-icon">⚡</div>
-                <div class="alert-content">
-                    <div class="alert-title">Key Principle: Systems Over Individuals</div>
-                    <p>These recommendations focus on process and environmental improvements rather than individual education or blame. Healthcare errors are nearly always systems failures, not individual competence issues. Effective patient safety interventions redesign systems to make errors impossible or immediately obvious.</p>
                 </div>
             </div>
         </div>
@@ -1130,25 +1089,6 @@
             <div class="card">
                 <h2><span class="icon">📋</span> Case Overview</h2>
                 <p style="font-size: 1.1rem; line-height: 1.8;">A 54-year-old male presented to the hospital with impaired left-sided vision and significant eyelid swelling. Despite complete vision loss developing during admission and persistent symptoms, multiple barriers to in-person ophthalmology evaluation led to a critical diagnostic delay of a <strong>central retinal artery occlusion (CRAO)</strong> — a time-sensitive ophthalmologic emergency.</p>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number">54</div>
-                    <div class="stat-label">Years Old</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">100%</div>
-                    <div class="stat-label">Vision Loss (Left Eye)</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">3+</div>
-                    <div class="stat-label">Consultation Attempts</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">48hr</div>
-                    <div class="stat-label">Delayed Evaluation</div>
-                </div>
             </div>
 
             <div class="alert">
@@ -1188,17 +1128,11 @@
                 <ul>
                     <li>Complete, acute vision loss is an ophthalmologic emergency requiring immediate specialist evaluation</li>
                     <li>Consultant recommendations via non-physician intermediaries may not reflect full clinical urgency</li>
-                    <li>Systems must support escalation pathways when specialists decline appropriate evaluation</li>
                     <li>Anchoring on initial diagnoses (orbital cellulitis) can delay recognition of alternative pathologies (CRAO)</li>
                 </ul>
             </div>
         </div>
 
-        <!-- Footer -->
-        <div class="footer">
-            <p><strong>Patient Safety Conference</strong> | Family Medicine Residency</p>
-            <p style="margin-top: 0.5rem; font-size: 0.85rem;">Prepared in compliance with institutional patient safety reporting guidelines</p>
-        </div>
     </div>
 
     <script>
@@ -1236,13 +1170,94 @@
             }
         });
 
-        // Add some interactivity to timeline items
-        document.querySelectorAll('.timeline-item').forEach(item => {
-            item.addEventListener('click', function() {
-                this.style.transform = 'translateX(10px)';
-                setTimeout(() => {
-                    this.style.transform = '';
-                }, 300);
+        // Timeline accordion interaction
+        const timelineItems = Array.from(document.querySelectorAll('.timeline-item'));
+
+        function setTimelineItemState(item, isActive) {
+            const content = item.querySelector('.timeline-content');
+            const isCurrentlyActive = item.classList.contains('active');
+            if (isCurrentlyActive === isActive) return;
+
+            if (isActive) {
+                item.classList.add('active');
+                item.setAttribute('aria-expanded', 'true');
+
+                // Expand to measured height, then allow natural growth to prevent clipping.
+                content.style.maxHeight = '0px';
+                requestAnimationFrame(() => {
+                    content.style.maxHeight = `${content.scrollHeight}px`;
+                });
+
+                const onExpandEnd = (e) => {
+                    if (e.propertyName !== 'max-height') return;
+                    if (item.classList.contains('active')) {
+                        content.style.maxHeight = 'none';
+                    }
+                    content.removeEventListener('transitionend', onExpandEnd);
+                };
+                content.addEventListener('transitionend', onExpandEnd);
+            } else {
+                // If open height is "none", set explicit pixel height before collapsing.
+                if (content.style.maxHeight === 'none' || !content.style.maxHeight) {
+                    content.style.maxHeight = `${content.scrollHeight}px`;
+                    void content.offsetHeight;
+                }
+
+                item.classList.remove('active');
+                item.setAttribute('aria-expanded', 'false');
+                requestAnimationFrame(() => {
+                    content.style.maxHeight = '0px';
+                });
+            }
+        }
+
+        function initializeTimelineAccordion() {
+            timelineItems.forEach((item, index) => {
+                item.setAttribute('role', 'button');
+                item.setAttribute('tabindex', '0');
+
+                const toggleItem = () => {
+                    const isCurrentlyOpen = item.classList.contains('active');
+                    setTimelineItemState(item, !isCurrentlyOpen);
+                };
+
+                item.addEventListener('click', toggleItem);
+                item.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        toggleItem();
+                    }
+                });
+
+                // Open the first event by default.
+                setTimelineItemState(item, index === 0);
+            });
+        }
+
+        initializeTimelineAccordion();
+
+        // RCA flip-card interaction
+        document.querySelectorAll('.rca-flip-card').forEach(card => {
+            const toggleCard = () => {
+                card.classList.toggle('flipped');
+                card.setAttribute('aria-pressed', String(card.classList.contains('flipped')));
+            };
+
+            card.addEventListener('click', toggleCard);
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleCard();
+                }
+            });
+        });
+
+        window.addEventListener('resize', () => {
+            timelineItems.forEach(item => {
+                if (item.classList.contains('active')) {
+                    const content = item.querySelector('.timeline-content');
+                    content.style.maxHeight = 'none';
+                }
             });
         });
     </script>

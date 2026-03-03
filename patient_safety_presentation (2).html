@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Safety Conference: Delayed Ophthalmology Evaluation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600;700&family=IBM Plex+Mono:wght@400;500&family=Source+Serif+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #1a4d2e;
+            --color-secondary: #c1121f;
+            --color-accent: #f77f00;
+            --color-bg: #faf9f6;
+            --color-surface: #ffffff;
+            --color-text: #1a1a1a;
+            --color-text-muted: #666666;
+            --color-border: #e0ddd5;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Serif Pro', Georgia, serif;
+            background: linear-gradient(135deg, #faf9f6 0%, #f0ede5 100%);
+            color: var(--color-text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .presentation-container {
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, var(--color-primary) 0%, #2d5a3d 100%);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(45deg, transparent 48%, rgba(255,255,255,0.03) 50%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, rgba(255,255,255,0.03) 50%, transparent 52%);
+            background-size: 30px 30px;
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .case-tag {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
+            color: #fff;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.9);
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 0.8rem 1.8rem;
+            background: var(--color-surface);
+            border: 2px solid var(--color-border);
+            border-radius: 50px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--color-text);
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-btn:hover {
+            background: var(--color-primary);
+            color: #fff;
+            border-color: var(--color-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-btn.active {
+            background: var(--color-primary);
+            color: #fff;
+            border-color: var(--color-primary);
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            background: var(--color-surface);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .card h2 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            color: var(--color-primary);
+            margin: 1.5rem 0 1rem;
+            font-weight: 600;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--color-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-accent) 100%);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 80px;
+            margin-bottom: 2.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            transform: translateX(5px);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 18px;
+            top: 0;
+            width: 26px;
+            height: 26px;
+            background: var(--color-surface);
+            border: 3px solid var(--color-primary);
+            border-radius: 50%;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover .timeline-dot {
+            background: var(--color-primary);
+            transform: scale(1.2);
+        }
+
+        .timeline-item.critical .timeline-dot {
+            background: var(--color-secondary);
+            border-color: var(--color-secondary);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(193, 18, 31, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(193, 18, 31, 0);
+            }
+        }
+
+        .timeline-time {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--color-accent);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content {
+            background: var(--color-surface);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .timeline-description {
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        /* Root Cause Diagram - Fishbone */
+        .fishbone-container {
+            background: var(--color-surface);
+            padding: 3rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        .fishbone-wrapper {
+            min-width: 1100px;
+            height: 700px;
+            position: relative;
+            margin: 2rem auto;
+        }
+
+        .spine {
+            position: absolute;
+            left: 5%;
+            top: 50%;
+            width: 70%;
+            height: 3px;
+            background: var(--color-primary);
+            transform: translateY(-50%);
+        }
+
+        .spine::after {
+            content: '';
+            position: absolute;
+            right: -15px;
+            top: -8px;
+            width: 0;
+            height: 0;
+            border-left: 20px solid var(--color-primary);
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+
+        .cause-bone {
+            position: absolute;
+        }
+
+        .bone-line {
+            position: absolute;
+            width: 140px;
+            height: 2px;
+            background: var(--color-accent);
+            transform-origin: left center;
+        }
+
+        .bone-label {
+            position: absolute;
+            background: var(--color-primary);
+            color: #fff;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            font-family: 'IBM Plex Mono', monospace;
+            letter-spacing: 0.5px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .bone-content {
+            position: absolute;
+            background: var(--color-surface);
+            border: 2px solid var(--color-accent);
+            border-radius: 8px;
+            padding: 1.2rem;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            min-width: 200px;
+            max-width: 260px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .bone-content ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .bone-content li {
+            margin-bottom: 0.6rem;
+            padding-left: 1.3rem;
+            position: relative;
+        }
+
+        .bone-content li:last-child {
+            margin-bottom: 0;
+        }
+
+        .bone-content li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Top bones */
+        .bone-1 {
+            left: 12%;
+            top: 18%;
+        }
+        .bone-1 .bone-line {
+            transform: rotate(-40deg);
+        }
+        .bone-1 .bone-label {
+            top: -45px;
+            left: 85px;
+        }
+        .bone-1 .bone-content {
+            top: -180px;
+            left: 110px;
+        }
+
+        .bone-2 {
+            left: 32%;
+            top: 23%;
+        }
+        .bone-2 .bone-line {
+            transform: rotate(-30deg);
+        }
+        .bone-2 .bone-label {
+            top: -40px;
+            left: 80px;
+        }
+        .bone-2 .bone-content {
+            top: -220px;
+            left: 115px;
+        }
+
+        .bone-3 {
+            left: 52%;
+            top: 28%;
+        }
+        .bone-3 .bone-line {
+            transform: rotate(-20deg);
+        }
+        .bone-3 .bone-label {
+            top: -35px;
+            left: 75px;
+        }
+        .bone-3 .bone-content {
+            top: -160px;
+            left: 110px;
+        }
+
+        /* Bottom bones */
+        .bone-4 {
+            left: 20%;
+            bottom: 18%;
+        }
+        .bone-4 .bone-line {
+            transform: rotate(40deg);
+        }
+        .bone-4 .bone-label {
+            bottom: -45px;
+            left: 85px;
+        }
+        .bone-4 .bone-content {
+            bottom: -160px;
+            left: 110px;
+        }
+
+        .bone-5 {
+            left: 42%;
+            bottom: 23%;
+        }
+        .bone-5 .bone-line {
+            transform: rotate(25deg);
+        }
+        .bone-5 .bone-label {
+            bottom: -40px;
+            left: 80px;
+        }
+        .bone-5 .bone-content {
+            bottom: -160px;
+            left: 115px;
+        }
+
+        .outcome-box {
+            position: absolute;
+            right: 8%;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, var(--color-secondary) 0%, #a01019 100%);
+            color: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            text-align: center;
+            width: 220px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .outcome-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .outcome-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        /* Cognitive Bias Cards */
+        .bias-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .bias-card {
+            background: var(--color-surface);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 2px solid var(--color-border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bias-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-accent), var(--color-secondary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .bias-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .bias-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--color-accent);
+        }
+
+        .bias-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .bias-definition {
+            color: var(--color-text-muted);
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .bias-application {
+            color: var(--color-text);
+            padding: 1rem;
+            background: rgba(26, 77, 46, 0.05);
+            border-radius: 6px;
+            border-left: 3px solid var(--color-primary);
+        }
+
+        /* Recommendations */
+        .recommendation-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .recommendation-item {
+            background: linear-gradient(135deg, var(--color-surface) 0%, #f8f8f8 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            border-left: 5px solid var(--color-accent);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-item:hover {
+            transform: translateX(10px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .recommendation-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: var(--color-accent);
+            color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: 700;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .recommendation-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .recommendation-description {
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        /* Alert Box */
+        .alert {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+            border: 2px solid var(--color-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .alert-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #2d5a3d 100%);
+            color: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            font-family: 'Crimson Pro', serif;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        /* Key Points */
+        .key-points {
+            background: linear-gradient(135deg, #fff9f0 0%, #fff5e6 100%);
+            border: 2px solid var(--color-accent);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .key-points h3 {
+            color: var(--color-accent);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .key-points ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .key-points li {
+            padding: 0.8rem 0;
+            padding-left: 2rem;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .key-points li::before {
+            content: '●';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent);
+            font-size: 1.5rem;
+            line-height: 1.3;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Print styles */
+        @media print {
+            .nav { display: none; }
+            .section { display: block !important; page-break-after: always; }
+            body { background: white; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .subtitle { font-size: 1.1rem; }
+            .card { padding: 1.5rem; }
+            .fishbone-wrapper { min-width: 100%; height: 900px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div class="case-tag">PATIENT SAFETY CONFERENCE</div>
+                <h1>Delayed Ophthalmology Evaluation</h1>
+                <div class="subtitle">A Case Study in Diagnostic Delay, Systems Failure, and the Critical Importance of In-Person Specialist Evaluation</div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav">
+            <button class="nav-btn active" onclick="showSection('timeline')">Timeline</button>
+            <button class="nav-btn" onclick="showSection('root-cause')">Root Cause Analysis</button>
+            <button class="nav-btn" onclick="showSection('cognitive-bias')">Cognitive Biases</button>
+            <button class="nav-btn" onclick="showSection('recommendations')">Recommendations</button>
+            <button class="nav-btn" onclick="showSection('overview')">Overview</button>
+        </div>
+
+        <!-- Timeline Section -->
+        <div id="timeline" class="section active">
+            <div class="card">
+                <h2><span class="icon">⏱️</span> Clinical Timeline</h2>
+                <p style="margin-bottom: 2rem; color: var(--color-text-muted);">The sequence of events revealing multiple missed opportunities for earlier diagnosis</p>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-time">Day 0 - Initial Presentation</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Hospital Admission</div>
+                            <div class="timeline-description">
+                                54-year-old male presents with left-sided vision impairment, significant eyelid swelling, and rhabdomyolysis. IV antibiotics started for empiric coverage of orbital cellulitis despite CT/MRI head not initially supporting diagnosis.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item critical">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-time">Day 1 - Morning</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Complete Vision Loss ⚠️</div>
+                            <div class="timeline-description">
+                                Patient endorses <strong>complete loss of left-sided vision</strong>, raising urgent concern for orbital cellulitis. Ophthalmology consulted.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-time">Day 1 - Ophthalmology Response #1</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Telephone Recommendation Only</div>
+                            <div class="timeline-description">
+                                Contact made with "Osiris" (ophthalmic assistant, per Google search). Recommended continuing IV antibiotics for 48 hours and reconsult if no improvement. Stated complete vision loss can occur due to swelling. Provided oral antibiotics, eye drops, and outpatient follow-up information. <strong>Declined to see patient before 48 hours elapsed.</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-time">Day 2-3</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Partial Clinical Improvement</div>
+                            <div class="timeline-description">
+                                Eyelid swelling improved, but <strong>vision did not return</strong>. Patient began experiencing pain, prompting re-consultation.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-time">Day 3 - Ophthalmology Response #2</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Second Telephone Recommendation</div>
+                            <div class="timeline-description">
+                                Ophthalmology again stated complete vision loss can occur due to swelling and clinical course is "expected." Recommended outpatient follow-up despite patient still admitted for rhabdomyolysis. <strong>Still no in-person evaluation.</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-time">Day 3-4</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Additional Imaging Ordered</div>
+                            <div class="timeline-description">
+                                MRI orbit ordered due to increasing pain with eye movement to rule out abscess. Results showed concern for <strong>left orbital cellulitis AND optic neuritis</strong>.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-time">Day 4 - Ophthalmology Response #3</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Request for Photos via Cerner</div>
+                            <div class="timeline-description">
+                                Vision loss persisted. Ophthalmology re-consulted. Requested uploading pictures of the eye to Cerner electronic system rather than in-person evaluation.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item critical">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-time">Day 4 - Attending Advocacy</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Escalation Required</div>
+                            <div class="timeline-description">
+                                Attending requested in-person evaluation given preceding events. Doc-to-doc conversation with ophthalmologist. Initial response: "If there's no abscess, nothing else to do besides IV antibiotics." Attending advocated strongly, noting significance of visual loss and concern about missing pathology team not trained to evaluate. <strong>Ophthalmologist finally agreed to see patient.</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item critical">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-time">Day 4 - In-Person Evaluation</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Diagnosis: Central Retinal Artery Occlusion</div>
+                            <div class="timeline-description">
+                                Ophthalmologist finally evaluated patient in-person and determined diagnosis of <strong>central retinal artery occlusion (CRAO)</strong>. Recommended stroke workup, largely already completed except echocardiogram, which would further prolong hospital stay for patient who had already attempted to leave AMA several times.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Root Cause Analysis -->
+        <div id="root-cause" class="section">
+            <div class="card">
+                <h2><span class="icon">🔍</span> Root Cause Analysis</h2>
+                <p style="margin-bottom: 2rem; color: var(--color-text-muted);">Fishbone diagram identifying contributing factors across people, environment, processes, methods, and technology</p>
+
+                <div class="fishbone-container">
+                    <div class="fishbone-wrapper">
+                        <div class="spine"></div>
+
+                        <!-- Top Bones -->
+                        <div class="cause-bone bone-1">
+                            <div class="bone-line"></div>
+                            <div class="bone-label">PEOPLE</div>
+                            <div class="bone-content">
+                                <ul>
+                                    <li>Consultant resistant to in-person evaluation</li>
+                                    <li>Residents/team uncomfortable with thorough ophthalmologic exam</li>
+                                    <li>Answering service staffed by non-physician</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="cause-bone bone-2">
+                            <div class="bone-line"></div>
+                            <div class="bone-label">ENVIRONMENT</div>
+                            <div class="bone-content">
+                                <ul>
+                                    <li>Weekend timing</li>
+                                    <li>Lack of academic ophthalmology service</li>
+                                    <li>No in-house ophthalmology coverage</li>
+                                    <li>Limited MRI availability delayed imaging</li>
+                                    <li>Deference to consultant expertise</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="cause-bone bone-3">
+                            <div class="bone-line"></div>
+                            <div class="bone-label">PROCESSES</div>
+                            <div class="bone-content">
+                                <ul>
+                                    <li>No policy requiring in-person specialist evaluation</li>
+                                    <li>No escalation pathway for declined consults</li>
+                                    <li>Unclear criteria for urgent vs. emergent consults</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Bones -->
+                        <div class="cause-bone bone-4">
+                            <div class="bone-line"></div>
+                            <div class="bone-label">METHODS</div>
+                            <div class="bone-content">
+                                <ul>
+                                    <li>Callbook system for finding consultants</li>
+                                    <li>"Consult Physician" order in Cerner</li>
+                                    <li>Reliance on answering services</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="cause-bone bone-5">
+                            <div class="bone-line"></div>
+                            <div class="bone-label">TECHNOLOGY</div>
+                            <div class="bone-content">
+                                <ul>
+                                    <li>No direct communication with consultant</li>
+                                    <li>Only indirect contact via answering service</li>
+                                    <li>Photo upload system used as substitute for evaluation</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="outcome-box">
+                            <div class="outcome-label">Adverse Outcome</div>
+                            <div class="outcome-title">DELAYED DIAGNOSIS OF CRAO</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><span class="icon">🎯</span> Contributing Factors Summary</h2>
+                
+                <h3>Primary Systems Failures</h3>
+                <div style="background: rgba(193, 18, 31, 0.05); padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                    <ul style="line-height: 1.8; margin-left: 1.5rem;">
+                        <li><strong>No mandatory in-person evaluation policy</strong> for vision-threatening emergencies</li>
+                        <li><strong>No escalation pathway</strong> when specialists decline appropriate evaluation</li>
+                        <li><strong>Communication barrier</strong> — inability to communicate directly with ophthalmologist</li>
+                        <li><strong>Non-physician intermediary</strong> making clinical triage decisions</li>
+                    </ul>
+                </div>
+
+                <h3>Secondary Contributing Factors</h3>
+                <ul style="line-height: 1.8; margin-left: 2rem; margin-top: 1rem;">
+                    <li>Weekend timing with reduced specialist availability</li>
+                    <li>Community hospital without academic ophthalmology service</li>
+                    <li>Limited MRI scanner availability delaying diagnostic imaging</li>
+                    <li>Team deference to specialist expertise, even when recommendations seemed inappropriate</li>
+                    <li>Resident team lacking confidence/training in ophthalmologic examination</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Cognitive Bias Section -->
+        <div id="cognitive-bias" class="section">
+            <div class="card">
+                <h2><span class="icon">🧠</span> Cognitive Biases Identified</h2>
+                <p style="margin-bottom: 2rem; color: var(--color-text-muted);">Understanding the cognitive errors that contributed to diagnostic delay</p>
+
+                <div class="bias-grid">
+                    <div class="bias-card">
+                        <div class="bias-name">Anchoring Bias</div>
+                        <div class="bias-definition">
+                            The tendency to rely too heavily on the first piece of information encountered (the "anchor") when making decisions, even when that information is incomplete or incorrect.
+                        </div>
+                        <div class="bias-application">
+                            <strong>How it manifested:</strong> Early fixation on orbital cellulitis as the diagnosis, despite negative initial imaging (CT and MRI head). The team and consultant remained anchored to this diagnosis even as the clinical picture evolved and vision loss became complete, delaying consideration of alternative etiologies like CRAO.
+                        </div>
+                    </div>
+
+                    <div class="bias-card">
+                        <div class="bias-name">Premature Closure</div>
+                        <div class="bias-definition">
+                            The tendency to stop considering alternative diagnoses once an initial diagnosis is reached, failing to reconsider when new information emerges.
+                        </div>
+                        <div class="bias-application">
+                            <strong>How it manifested:</strong> After settling on orbital cellulitis, there was failure to reconsider the diagnosis despite worsening vision, development of pain, and new MRI findings suggesting optic neuritis. The diagnostic process "closed" prematurely, preventing timely recognition of CRAO.
+                        </div>
+                    </div>
+
+                    <div class="bias-card">
+                        <div class="bias-name">Authority Bias</div>
+                        <div class="bias-definition">
+                            The tendency to attribute greater accuracy to the opinion of an authority figure and be more influenced by that opinion, even when the authority's recommendations may be inappropriate.
+                        </div>
+                        <div class="bias-application">
+                            <strong>How it manifested:</strong> Excessive deference to ophthalmology consultant recommendations (via answering service) despite multiple red flags: complete vision loss, persistent symptoms, evolving clinical picture. The team hesitated to push back against specialist recommendations even when in-person evaluation seemed clearly indicated.
+                        </div>
+                    </div>
+
+                    <div class="bias-card">
+                        <div class="bias-name">Availability Bias</div>
+                        <div class="bias-definition">
+                            The tendency to overestimate the likelihood of events that are more memorable or easier to recall, often because they are dramatic, recent, or frequently discussed.
+                        </div>
+                        <div class="bias-application">
+                            <strong>How it manifested:</strong> Orbital cellulitis is a commonly taught cause of vision loss with eyelid swelling, making it readily "available" for consideration. CRAO, while time-critical, may have been less readily considered due to lower frequency in general practice, despite being the correct diagnosis.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert">
+                <div class="alert-icon">💡</div>
+                <div class="alert-content">
+                    <div class="alert-title">Debiasing Strategy</div>
+                    <p><strong>Forced Consideration of Alternatives:</strong> In cases of acute, complete vision loss, implement a systematic differential diagnosis review that explicitly includes vascular etiologies (CRAO, CRVO), inflammatory causes (optic neuritis), and infectious etiologies. This checklist-based approach can counteract anchoring and premature closure.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations Section -->
+        <div id="recommendations" class="section">
+            <div class="card">
+                <h2><span class="icon">✅</span> Practice Improvement Recommendations</h2>
+                <p style="margin-bottom: 2rem; color: var(--color-text-muted);">System-level changes to prevent similar adverse events</p>
+
+                <div class="recommendation-list">
+                    <div class="recommendation-item">
+                        <div>
+                            <span class="recommendation-number">1</span>
+                            <span class="recommendation-title">Mandatory In-Person Ophthalmology Evaluation Policy</span>
+                        </div>
+                        <div class="recommendation-description">
+                            <strong>Recommendation:</strong> Establish institutional policy requiring mandatory in-person ophthalmology consultation within 2 hours for all cases of new, acute, or worsening vision loss.
+                            <br><br>
+                            <strong>Rationale:</strong> Vision loss is a time-sensitive emergency. CRAO has a therapeutic window similar to stroke (hours, not days). Remote assessment via photos or telephonic recommendations is insufficient for acute vision-threatening conditions.
+                            <br><br>
+                            <strong>Implementation:</strong> Create clear criteria in EHR order sets. Flag "acute vision loss" consults as requiring immediate in-person evaluation. Provide explicit language for requesting physicians to escalate if declined.
+                        </div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div>
+                            <span class="recommendation-number">2</span>
+                            <span class="recommendation-title">Consultation Escalation Pathway</span>
+                        </div>
+                        <div class="recommendation-description">
+                            <strong>Recommendation:</strong> Develop a formal escalation pathway when specialists decline what requesting team considers appropriate evaluation. Include chain of command (consultant → division chief → department chair → CMO).
+                            <br><br>
+                            <strong>Rationale:</strong> Currently, no mechanism exists for residents/attendings to escalate when specialist recommendations seem inappropriate. This creates dangerous power imbalances where urgent patient needs may not be met.
+                            <br><br>
+                            <strong>Implementation:</strong> Create consultation escalation protocol. Train residents on appropriate use. Track escalation events for quality review.
+                        </div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div>
+                            <span class="recommendation-number">3</span>
+                            <span class="recommendation-title">Direct Physician Communication for Urgent Consults</span>
+                        </div>
+                        <div class="recommendation-description">
+                            <strong>Recommendation:</strong> Require direct physician-to-physician communication for all urgent/emergent consultations, eliminating non-physician answering services as intermediaries for clinical decision-making.
+                            <br><br>
+                            <strong>Rationale:</strong> Clinical triage decisions made by non-physicians (even trained ophthalmic assistants) may not adequately assess urgency or recognize red flags requiring immediate evaluation.
+                            <br><br>
+                            <strong>Implementation:</strong> Provide direct contact numbers for on-call specialists. Mandate callback within 15 minutes for urgent consults. Consider secure messaging platforms for rapid physician-to-physician communication.
+                        </div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div>
+                            <span class="recommendation-number">4</span>
+                            <span class="recommendation-title">Enhanced Diagnostic Imaging Availability</span>
+                        </div>
+                        <div class="recommendation-description">
+                            <strong>Recommendation:</strong> Increase MRI scanner availability and prioritize urgent neurologic/ophthalmologic cases to reduce time to diagnosis.
+                            <br><br>
+                            <strong>Rationale:</strong> Delayed MRI orbit availability in this case prolonged diagnostic uncertainty and contributed to delayed recognition of optic neuritis and ultimately CRAO.
+                            <br><br>
+                            <strong>Implementation:</strong> Assess current MRI utilization patterns. Consider additional scanner or extended hours. Create clear prioritization criteria for urgent ophthalmologic/neurologic imaging.
+                        </div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div>
+                            <span class="recommendation-number">5</span>
+                            <span class="recommendation-title">Resident Education: Acute Vision Loss Evaluation</span>
+                        </div>
+                        <div class="recommendation-description">
+                            <strong>Recommendation:</strong> Provide structured teaching sessions on basic ophthalmologic examination and differential diagnosis of acute vision loss, empowering residents to better recognize urgent pathology and advocate for appropriate specialist evaluation.
+                            <br><br>
+                            <strong>Rationale:</strong> While specialist consultation is essential, residents should have baseline competency to recognize vision-threatening emergencies and understand when specialist evaluation is non-negotiable.
+                            <br><br>
+                            <strong>Implementation:</strong> Include acute vision loss module in resident orientation. Provide pocket cards with red flags requiring immediate ophthalmology evaluation. Simulation cases during morning report.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-points">
+                <h3>🎯 Implementation Priorities</h3>
+                <ul>
+                    <li><strong>Immediate (0-3 months):</strong> Establish consultation escalation pathway; create acute vision loss policy</li>
+                    <li><strong>Short-term (3-6 months):</strong> Implement direct physician communication requirement; develop resident education module</li>
+                    <li><strong>Long-term (6-12 months):</strong> Assess MRI capacity and consider expansion; track outcomes and policy compliance</li>
+                </ul>
+            </div>
+
+            <div class="alert">
+                <div class="alert-icon">⚡</div>
+                <div class="alert-content">
+                    <div class="alert-title">Key Principle: Systems Over Individuals</div>
+                    <p>These recommendations focus on process and environmental improvements rather than individual education or blame. Healthcare errors are nearly always systems failures, not individual competence issues. Effective patient safety interventions redesign systems to make errors impossible or immediately obvious.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overview Section -->
+        <div id="overview" class="section">
+            <div class="card">
+                <h2><span class="icon">📋</span> Case Overview</h2>
+                <p style="font-size: 1.1rem; line-height: 1.8;">A 54-year-old male presented to the hospital with impaired left-sided vision and significant eyelid swelling. Despite complete vision loss developing during admission and persistent symptoms, multiple barriers to in-person ophthalmology evaluation led to a critical diagnostic delay of a <strong>central retinal artery occlusion (CRAO)</strong> — a time-sensitive ophthalmologic emergency.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">54</div>
+                    <div class="stat-label">Years Old</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Vision Loss (Left Eye)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3+</div>
+                    <div class="stat-label">Consultation Attempts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">48hr</div>
+                    <div class="stat-label">Delayed Evaluation</div>
+                </div>
+            </div>
+
+            <div class="alert">
+                <div class="alert-icon">⚠️</div>
+                <div class="alert-content">
+                    <div class="alert-title">Type of Event: Adverse Event</div>
+                    <p>Delay in evaluation resulting in diagnostic error and ultimately incomplete evaluation leading to patient harm for a condition that could have received timely intervention.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><span class="icon">🏥</span> Clinical Presentation</h2>
+                <h3>Initial Presentation</h3>
+                <ul style="line-height: 1.8; margin-left: 2rem;">
+                    <li>Left-sided vision impairment with significant eyelid swelling</li>
+                    <li>Patient uncertain if impairment was from swelling vs. intrinsic eye pathology</li>
+                    <li>Concurrent rhabdomyolysis (stable)</li>
+                    <li>CT and MRI head initially not supportive of orbital cellulitis despite clinical suspicion</li>
+                </ul>
+
+                <h3>Disease Progression</h3>
+                <ul style="line-height: 1.8; margin-left: 2rem;">
+                    <li><strong>Morning after admission:</strong> Complete loss of left-sided vision</li>
+                    <li><strong>Mid-course:</strong> Eyelid swelling improved but vision remained absent</li>
+                    <li><strong>Later course:</strong> Development of pain with eye movement</li>
+                    <li><strong>MRI orbit:</strong> Concern for orbital cellulitis AND optic neuritis</li>
+                </ul>
+
+                <h3>Final Diagnosis</h3>
+                <p style="font-size: 1.1rem; margin-top: 1rem; padding: 1.5rem; background: rgba(193, 18, 31, 0.05); border-left: 4px solid var(--color-secondary); border-radius: 6px;">
+                    <strong>Central Retinal Artery Occlusion (CRAO)</strong> — A stroke of the eye requiring immediate intervention, similar to acute ischemic stroke requiring intervention within hours for optimal outcomes.
+                </p>
+            </div>
+
+            <div class="key-points">
+                <h3>🎯 Key Learning Points</h3>
+                <ul>
+                    <li>Complete, acute vision loss is an ophthalmologic emergency requiring immediate specialist evaluation</li>
+                    <li>Consultant recommendations via non-physician intermediaries may not reflect full clinical urgency</li>
+                    <li>Systems must support escalation pathways when specialists decline appropriate evaluation</li>
+                    <li>Anchoring on initial diagnoses (orbital cellulitis) can delay recognition of alternative pathologies (CRAO)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Patient Safety Conference</strong> | Family Medicine Residency</p>
+            <p style="margin-top: 0.5rem; font-size: 0.85rem;">Prepared in compliance with institutional patient safety reporting guidelines</p>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            const sections = ['timeline', 'root-cause', 'cognitive-bias', 'recommendations', 'overview'];
+            const currentSection = document.querySelector('.section.active').id;
+            const currentIndex = sections.indexOf(currentSection);
+
+            if (e.key === 'ArrowRight' && currentIndex < sections.length - 1) {
+                const buttons = document.querySelectorAll('.nav-btn');
+                buttons[currentIndex + 1].click();
+            } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                const buttons = document.querySelectorAll('.nav-btn');
+                buttons[currentIndex - 1].click();
+            }
+        });
+
+        // Add some interactivity to timeline items
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.transform = 'translateX(10px)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>
